@@ -16,6 +16,8 @@ public class GameWindow {
 		
 		jframe.add(gamePanel);
 		
+		jframe.setLocationRelativeTo(null);
+		
 		// Should be called last.
 		jframe.setVisible(true);
 	}
