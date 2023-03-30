@@ -130,6 +130,10 @@ public class GamePanel extends JPanel{
 		}
 	}
 	
+	public void updateGame() {
+		
+	}
+	
 	// Override paintComponent from JComponent superclass
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
