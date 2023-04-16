@@ -4,12 +4,16 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import ui.PauseOverlay;
 import utils.LoadSave;
+
+import static utils.Constants.Environment.*;
 
 public class Playing extends State implements StateMethods{
 	private Player player;
@@ -25,9 +29,21 @@ public class Playing extends State implements StateMethods{
 	private int maxTilesOffset = levelTileWidth - Game.TILES_IN_WIDTH;
 	private int maxLevelOffsetX = maxTilesOffset * Game.TILES_SIZE;
 	
+	private BufferedImage backgroundImg, bigCloud, smallCloud;
+	private int[] smallCloudsPos;
+	private Random rnd = new Random();
+	
 	public Playing(Game game) {
 		super(game);
 		initClasses();
+		
+		backgroundImg = LoadSave.getSpriteAtlas(LoadSave.PLAYING_BG_IMG);
+		bigCloud = LoadSave.getSpriteAtlas(LoadSave.BIG_CLOUDS);
+		smallCloud = LoadSave.getSpriteAtlas(LoadSave.SMALL_CLOUDS);
+		
+		smallCloudsPos = new int[8];
+		for (int i = 0; i < smallCloudsPos.length; i++)
+			smallCloudsPos[i] = (int) (90 * Game.SCALE) + rnd.nextInt((int) (100 * Game.SCALE));
 	}
 	
 	private void initClasses() {
@@ -65,6 +81,10 @@ public class Playing extends State implements StateMethods{
 
 	@Override
 	public void draw(Graphics g) {
+		g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+		
+		drawClouds(g);
+		
 		levelManager.draw(g, xLevelOffset);
 		player.render(g, xLevelOffset);
 		
@@ -75,6 +95,14 @@ public class Playing extends State implements StateMethods{
 		}
 	}
 	
+	private void drawClouds(Graphics g) {
+		for (int i = 0; i < 3; i++)
+			g.drawImage(bigCloud, 0 + (i * BIG_CLOUD_WIDTH - (int) (xLevelOffset * 0.3)), (int) (204 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
+	
+		for (int i = 0; i < smallCloudsPos.length; i++)
+			g.drawImage(smallCloud, (SMALL_CLOUD_WIDTH * 4 * i - (int) (xLevelOffset * 0.7)), smallCloudsPos[i], SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
+	}
+
 	public void mouseDragged(MouseEvent e) {
 		if (paused)
 			pauseOverlay.mouseDragged(e);
