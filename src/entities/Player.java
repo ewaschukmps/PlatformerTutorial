@@ -40,8 +40,8 @@ public class Player extends Entity {
 		setAnimation();
 	}
 	
-	public void render(Graphics g) {
-		g.drawImage(animations[playerAction][animIndex], (int) (hitbox.x - xDrawOffset), (int) (hitbox.y - yDrawOffset), width, height, null);
+	public void render(Graphics g, int levelOffset) {
+		g.drawImage(animations[playerAction][animIndex], (int) (hitbox.x - xDrawOffset) - levelOffset, (int) (hitbox.y - yDrawOffset), width, height, null);
 		drawHitbox(g);
 	}
 	
@@ -102,9 +102,9 @@ public class Player extends Entity {
 			jump();
 		}
 		
-		if (!left && !right && !inAir) {
-			return;
-		}
+		if (!inAir)
+			if ((!left && !right) || (right && left)) 
+				return;
 		
 		float xSpeed = 0;
 		
